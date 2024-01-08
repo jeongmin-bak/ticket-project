@@ -1,7 +1,5 @@
 package com.example.ticketproject.entity;
 
-import org.springframework.data.annotation.Id;
-
 import com.example.ticketproject.dto.sports.SportsRequestDto;
 
 import jakarta.persistence.*;
