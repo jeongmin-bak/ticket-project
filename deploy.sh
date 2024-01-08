@@ -57,7 +57,7 @@ else
 
   if [ -z "$GREEN_HEALTH" ]; then
 
-      sudo ./slack_green.sh
+      sudo /home/ubuntu/slack_blue.sh
   else
 
       # /home/ubuntu/deploy.log: 로그 파일에 "blue 중단 시작"이라는 내용을 추가
