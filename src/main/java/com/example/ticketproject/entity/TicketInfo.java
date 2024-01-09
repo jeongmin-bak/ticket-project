@@ -31,6 +31,7 @@ public class TicketInfo {
     private Long ticketPrice;
 
     @Column(nullable = false)
+    //@Version
     private Long stock;
 
     @Column(nullable = false)
@@ -57,8 +58,8 @@ public class TicketInfo {
         this.closeDate = requestDto.getCloseDate();
     }
 
-    //@Transactional
-    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
+    @Transactional
+    @Lock(value = LockModeType.OPTIMISTIC)
 	public void updateStock(Long amount) {
         if (this.stock + amount < 0) {
             throw new OutOfStockException("재고 소진");

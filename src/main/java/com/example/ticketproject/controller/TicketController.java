@@ -2,7 +2,6 @@ package com.example.ticketproject.controller;
 
 import java.util.List;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,9 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ticketproject.dto.ApiResponse;
 import com.example.ticketproject.dto.ticket.TicketRequestDto;
 import com.example.ticketproject.dto.ticket.TicketResponseDto;
-import com.example.ticketproject.redis.lock.RedissonLockTicketFacade;
+import com.example.ticketproject.redis.facade.RedissonLockTicketFacade;
 import com.example.ticketproject.service.TicketService;
-import com.example.ticketproject.service.TicketServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -12,19 +12,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.ticketproject.dto.ticket.TicketRequestDto;
-import com.example.ticketproject.redis.lock.RedissonLockTicketFacade;
+import com.example.ticketproject.redis.facade.OptimisticLockStockFacade;
 import com.example.ticketproject.repository.TicketInfoRepository;
 
 @SpringBootTest
 public class TicketServiceTest {
 	@Autowired
 	private TicketServiceImpl ticketService;
+	@Autowired
+	private OptimisticLockStockFacade optimisticLockStockFacade;
 
 	@Autowired
 	private TicketInfoRepository ticketInfoRepository;
 
 	@Test
-	@DisplayName("일반 ticketservice 100명 예약 테스트/ 비관적 락")
+	@DisplayName("일반 ticketservice 100명 예약 테스트")
 	public void test() throws InterruptedException {
 		int threadCount = 100;
 		//멀티스레드 이용 ExecutorService : 비동기를 단순하게 처리할 수 있또록 해주는 java api
@@ -43,6 +45,32 @@ public class TicketServiceTest {
 				}
 			});
 		}
+		latch.await();
+		long result = ticketInfoRepository.findById(1L).get().getStock();
+		assertEquals(0L, result);
+	}
+
+	@Test
+	@DisplayName("Optimistic Lock(낙관적 락) 사용")
+	public void test2() throws InterruptedException {
+		int threadCount = 100;
+		ExecutorService executorService = Executors.newFixedThreadPool(32);
+		CountDownLatch latch = new CountDownLatch(threadCount);
+
+		for (int i = 0; i < threadCount; i++) {
+			TicketRequestDto ticketRequestDto = TicketRequestDto.builder()
+				.ticketInfoId(1L).posX((long)i).posY((long)i).build();
+			executorService.submit(() -> {
+				try{
+					optimisticLockStockFacade.reserveTicket(1L, ticketRequestDto);
+				}catch (InterruptedException e){
+					e.printStackTrace();
+				}finally {
+					latch.countDown();
+				}
+			});
+		}
+
 		latch.await();
 		long result = ticketInfoRepository.findById(1L).get().getStock();
 		assertEquals(0L, result);
