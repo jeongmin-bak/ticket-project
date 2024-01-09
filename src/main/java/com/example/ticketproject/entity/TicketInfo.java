@@ -57,7 +57,7 @@ public class TicketInfo {
         this.closeDate = requestDto.getCloseDate();
     }
 
-    @Transactional
+    //@Transactional
     @Lock(value = LockModeType.PESSIMISTIC_WRITE)
 	public void updateStock(Long amount) {
         if (this.stock + amount < 0) {

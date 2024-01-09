@@ -36,7 +36,6 @@ public class RedissonLockTicketServiceTest {
 		//다른 스레드에서 수행이 완료될 때 까지 대기할 수 있도록 도와주는 API - 요청이 끝날때 까지 기다림
 		CountDownLatch latch = new CountDownLatch(threadCount);
 		for (int i = 0; i < threadCount; i++) {
-			System.out.println(i + "번 유저 예매 시작");
 			TicketRequestDto ticketRequestDto = TicketRequestDto.builder()
 				.ticketInfoId(1L).posX((long)i).posY((long)i).build();
 			executorService.submit(() ->{
@@ -50,7 +49,7 @@ public class RedissonLockTicketServiceTest {
 		}
 		latch.await();
 		long result = ticketInfoRepository.findById(1L).get().getStock();
-		//assertEquals(0L, result);
+		assertEquals(0L, result);
 	}
 
 	@Test
