@@ -1,0 +1,9 @@
+### 3. 티켓 예매하기
+POST http://localhost:8080/api/mytickets/reserve?userId=1
+Content-Type: application/json
+
+{
+  "ticketInfoId" : 1,
+  "posX" : 12,
+  "posY" : 18
+}
