@@ -2,6 +2,7 @@ package com.example.ticketproject.controller;
 
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +15,8 @@ import com.example.ticketproject.dto.ApiResponse;
 import com.example.ticketproject.dto.ticket.TicketRequestDto;
 import com.example.ticketproject.dto.ticket.TicketResponseDto;
 import com.example.ticketproject.redis.lock.RedissonLockTicketFacade;
-import com.example.ticketproject.redis.queue.WaitingQueue;
 import com.example.ticketproject.service.TicketService;
+import com.example.ticketproject.service.TicketServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/mytickets")
 public class TicketController {
 	private final TicketService ticketService;
-	private final WaitingQueue waitingQueue;
 	private final RedissonLockTicketFacade redissonLockTicketFacade;
 
 	// 예매한 티켓 목록 조회
@@ -42,9 +42,16 @@ public class TicketController {
 		return ApiResponse.success("티켓 상세 조회에 성공했습니다", ticketService.showDetailTicket(userId, ticketId));
 	}
 
+	// 일반 티켓 예매
+	@PostMapping("/reserve")
+	public ApiResponse reserveTicket(@RequestParam(name = "userId") Long userId, @RequestBody TicketRequestDto ticketRequestDto) {
+		return ApiResponse.success("예매가 완료되었습니다.", ticketService.reserveTicket(userId, ticketRequestDto));
+	}
+
+
 	// 예매 - redisson
 	@PostMapping("/reserve/redisson")
-	public ApiResponse reserveTicket(@RequestParam(name="userId")Long userId, @RequestBody TicketRequestDto ticketRequestDto) {
+	public ApiResponse reserveTicketRedisson(@RequestParam(name="userId")Long userId, @RequestBody TicketRequestDto ticketRequestDto) {
 		return ApiResponse.success("예매가 완료되었습니다.", redissonLockTicketFacade.reserveTicket(userId, ticketRequestDto));
 	}
 

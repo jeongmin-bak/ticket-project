@@ -5,10 +5,12 @@ import java.util.concurrent.TimeUnit;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.example.ticketproject.dto.ticket.TicketRequestDto;
 import com.example.ticketproject.dto.ticket.TicketResponseDto;
 import com.example.ticketproject.service.TicketService;
+import com.example.ticketproject.service.TicketServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,18 +27,18 @@ public class RedissonLockTicketFacade {
     public TicketResponseDto reserveTicket(Long userId, TicketRequestDto requestDto) {
         Long ticketInfoId = requestDto.getTicketInfoId();
         RLock lock = redissonClient.getLock(ticketInfoId.toString());
-        TicketResponseDto responseDto;
         log.info("lock 획득 시도");
+        TicketResponseDto ticketResponseDto;
         try {
             // lock 획득 시도 시간, lock 점유 시간
-            boolean available = lock.tryLock(30, 1, TimeUnit.SECONDS);
+            boolean available = lock.tryLock(10, 1, TimeUnit.SECONDS);
 
             if (!available) {
                 log.info("lock 획득 실패");
                 return new TicketResponseDto();
             }
             log.info("lock 획득 성공");
-            responseDto = ticketService.reserveTicket(userId, requestDto);
+            return ticketService.reserveTicket(userId, requestDto);
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -46,6 +48,5 @@ public class RedissonLockTicketFacade {
             }
         }
 
-        return responseDto;
     }
 }
