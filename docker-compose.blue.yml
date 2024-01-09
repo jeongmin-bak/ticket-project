@@ -5,3 +5,8 @@ services:
     ports:
       - "8081:8080"
     container_name: seniors-blue
+    environment:
+      - REDIS_HOST = 3.39.139.19
+      - REDIS_PORT = 6379
+volumes:
+  redis_data:
