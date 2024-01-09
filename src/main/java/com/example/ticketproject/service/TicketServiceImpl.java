@@ -35,11 +35,12 @@ public class TicketServiceImpl implements TicketService{
 	@Override
 	@Transactional
 	public TicketResponseDto reserveTicket(Long userId, TicketRequestDto ticketRequestDto) {
+		log.info("티켓 예매 시작");
 		TicketInfo ticketInfo = ticketInfoRepository.findById(ticketRequestDto.getTicketInfoId()).get();
 		User user = User.builder().userId(userId).build();
 		Ticket ticket = new Ticket(user, ticketInfo, ticketRequestDto);
-		ticketRepository.save(ticket);
 
+		ticketRepository.save(ticket);
 		ticketInfo.updateStock(-1L);
 		return new TicketResponseDto(ticket);
 	}

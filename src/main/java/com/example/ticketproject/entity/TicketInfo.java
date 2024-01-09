@@ -2,6 +2,8 @@ package com.example.ticketproject.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.jpa.repository.Lock;
+
 import com.example.ticketproject.dto.ticketinfo.TicketInfoRequestDto;
 import com.example.ticketproject.exception.entity.TicketInfo.OutOfStockException;
 
@@ -56,6 +58,7 @@ public class TicketInfo {
     }
 
     @Transactional
+    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
 	public void updateStock(Long amount) {
         if (this.stock + amount < 0) {
             throw new OutOfStockException("재고 소진");
