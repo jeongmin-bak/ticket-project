@@ -1,4 +1,4 @@
-package com.example.ticketproject;
+package com.example.ticketproject.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
