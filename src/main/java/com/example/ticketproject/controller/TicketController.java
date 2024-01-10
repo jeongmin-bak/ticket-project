@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ticketproject.dto.ApiResponse;
 import com.example.ticketproject.dto.ticket.TicketRequestDto;
 import com.example.ticketproject.dto.ticket.TicketResponseDto;
+import com.example.ticketproject.dto.user.RegisterUserResponse;
 import com.example.ticketproject.redis.facade.RedissonLockTicketFacade;
+import com.example.ticketproject.redis.service.WaitingQueueService;
 import com.example.ticketproject.service.TicketService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/mytickets")
 public class TicketController {
 	private final TicketService ticketService;
+	private final WaitingQueueService waitingQueueService;
 	private final RedissonLockTicketFacade redissonLockTicketFacade;
 
 	// 예매한 티켓 목록 조회
@@ -51,6 +55,14 @@ public class TicketController {
 	@PostMapping("/reserve/redisson")
 	public ApiResponse reserveTicketRedisson(@RequestParam(name="userId")Long userId, @RequestBody TicketRequestDto ticketRequestDto) {
 		return ApiResponse.success("예매가 완료되었습니다.", redissonLockTicketFacade.reserveTicket(userId, ticketRequestDto));
+	}
+
+	//jungmin sorted set
+	@PostMapping("/reserve/waiting/queue/sortedset")
+	public RegisterUserResponse reserveTicketQueueSortedSet(@RequestParam(name="userId")Long userId, @RequestBody TicketRequestDto ticketRequestDto) throws
+		JsonProcessingException {
+		// user는 jwt 인증으로만 사용한다.
+		return new RegisterUserResponse(waitingQueueService.registerQueue(ticketRequestDto));
 	}
 
 }
