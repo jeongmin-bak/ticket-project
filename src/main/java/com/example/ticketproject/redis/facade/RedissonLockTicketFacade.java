@@ -1,16 +1,14 @@
-package com.example.ticketproject.redis.lock;
+package com.example.ticketproject.redis.facade;
 
 import java.util.concurrent.TimeUnit;
 
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.example.ticketproject.dto.ticket.TicketRequestDto;
 import com.example.ticketproject.dto.ticket.TicketResponseDto;
 import com.example.ticketproject.service.TicketService;
-import com.example.ticketproject.service.TicketServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
