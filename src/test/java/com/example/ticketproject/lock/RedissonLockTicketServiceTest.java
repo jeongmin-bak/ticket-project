@@ -28,9 +28,9 @@ public class RedissonLockTicketServiceTest {
 	@Test
 	@DisplayName("일반 ticketservice 100명 예약 테스트/ 비관적 락 / 낙관적락")
 	public void test() throws InterruptedException {
-		int threadCount = 100;
+		int threadCount = 500;
 		//멀티스레드 이용 ExecutorService : 비동기를 단순하게 처리할 수 있또록 해주는 java api
-		ExecutorService executorService = Executors.newFixedThreadPool(32);
+		ExecutorService executorService = Executors.newFixedThreadPool(64);
 		//다른 스레드에서 수행이 완료될 때 까지 대기할 수 있도록 도와주는 API - 요청이 끝날때 까지 기다림
 		CountDownLatch latch = new CountDownLatch(threadCount);
 		for (int i = 0; i < threadCount; i++) {
