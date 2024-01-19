@@ -73,7 +73,7 @@ jobs:
         run: |
           aws s3 cp \
             --region ap-northeast-2 \
-            ./seniors-build.zip s3://ticket-s3-bucket
+            ./yeti.zip s3://ticket-s3-bucket
 
       # CodeDeploy에 배포 요청
       - name: Code Deploy Deployment Request
