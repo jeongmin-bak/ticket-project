@@ -1,0 +1,14 @@
+version: '3'
+services:
+  app:
+    container_name: app
+    image: yeti/yeti
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_HOST = 3.39.139.19
+      - REDIS_PORT = 6379
+volumes:
+  redis_data:
